@@ -1,0 +1,87 @@
+:root{
+  --bg:#05060a;
+  --neon:#7afcff;
+  --muted:#96a0b4;
+  --accent:#ff2d6f;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* Register Now Banner */
+.register-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(127, 252, 255, 0.2);
+  z-index: 1000;
+  padding: 15px 0;
+}
+
+.register-text {
+  text-align: center;
+  font-family: 'Creepster', cursive, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: var(--neon);
+}
+
+.char { display:inline-block; transition: all 0.3s ease; text-shadow:0 0 5px var(--neon); opacity:.6; transform:scale(1) }
+.char.glowing { opacity:1; text-shadow:0 0 10px var(--neon),0 0 20px var(--neon),0 0 30px var(--neon),0 0 40px var(--neon); transform:scale(1.1); color:#fff }
+.char.flickering { animation: charFlicker .2s ease-in-out }
+@keyframes charFlicker { 0%,100%{opacity:1;transform:scale(1.1)} 50%{opacity:.3;transform:scale(.9)} }
+
+body{
+  min-height:100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: radial-gradient(circle at 20% 20%, #0b0d13 0%, var(--bg) 40%);
+  color:#e6eef8;
+  -webkit-font-smoothing:antialiased;
+  padding-top: 80px; /* fixed banner spacing */
+}
+
+.stage{padding:28px; max-width: 980px; margin: 0 auto}
+header{display:flex;justify-content:space-between;align-items:flex-start}
+.title{font-size:2.8rem;color:var(--neon);text-shadow:0 0 10px var(--neon);animation:flicker 6s linear infinite}
+.subtitle{font-size:0.9rem;color:var(--muted);margin-top:6px}
+@keyframes flicker { 0%,10%,20%,40%,60%,100%{opacity:1} 11%,21%,61%{opacity:.25} }
+
+/* bulbs */
+.lights{display:flex;gap:10px;align-items:center}
+.bulb{width:18px;height:18px;border-radius:50%;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.6);transition:transform .12s, box-shadow .12s}
+.bulb.red{background:#ff616f;color:#ff616f}
+.bulb.yellow{background:#ffd66b;color:#ffd66b}
+.bulb.green{background:#70ff9d;color:#70ff9d}
+.bulb.blue{background:#6fb3ff;color:#6fb3ff}
+.bulb.on{transform:translateY(-2px);box-shadow:0 8px 28px currentColor}
+
+/* layout: single centered scene */
+.portal-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:22px}
+.panel{background:rgba(255,255,255,0.02);padding:16px;border-radius:12px}
+
+/* scene */
+.scene{position:relative;width: min(100%, 720px);height:420px;border-radius:10px;overflow:hidden;perspective:1000px;cursor:pointer;transition:transform .9s cubic-bezier(.2,.9,.2,1)}
+.scene.upside{transform:rotateX(180deg)}
+.stars{position:absolute;inset:0;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;background:rgba(255,255,255,.9);border-radius:50%}
+.portal{position:absolute;left:50%;top:40%;width:240px;height:240px;border-radius:50%;transform:translate(-50%,-50%);background:conic-gradient(from 90deg, rgba(127,0,255,0.16), rgba(0,255,200,0.07));filter:blur(8px)}
+.portal-core{position:absolute;left:50%;top:50%;width:120px;height:120px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.04) 6%)}
+
+/* controls */
+.controls{display:flex;gap:8px;margin-top:8px}
+.control-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer}
+
+/* dice removed */
+.dice{display:none}
+.hidden{opacity:0;pointer-events:none;transform:scale(.3)}
+
+/* footer */
+footer{margin-top:18px;display:flex;justify-content:space-between;color:var(--muted);font-size:0.85rem}
+
+@media (max-width: 768px){
+  .scene{height:320px}
+  .controls{flex-wrap:wrap}
+}

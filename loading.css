@@ -1,0 +1,685 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Orbitron:wght@400;700&family=Special+Elite&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 25%, #000 50%, #1a0000 75%, #0a0a0a 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease-in-out infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-family: 'Creepster', cursive;
+  color: #ff0000;
+  position: relative;
+}
+
+/* Camera motion during fall */
+body.fall-sequence {
+  animation: cameraFall 2.6s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+/* Bluish flame-like background structure */
+.flame-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.flame {
+  position: absolute;
+  bottom: -50px;
+  width: 100px;
+  height: 200px;
+  background: linear-gradient(to top, 
+    rgba(0, 150, 255, 0.8) 0%,
+    rgba(0, 200, 255, 0.6) 30%,
+    rgba(100, 200, 255, 0.4) 60%,
+    rgba(150, 220, 255, 0.2) 80%,
+    transparent 100%);
+  border-radius: 50% 50% 20% 20%;
+  filter: blur(3px);
+  animation: flameFlicker 3s ease-in-out infinite;
+}
+
+.flame-1 {
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 4s;
+  height: 250px;
+  width: 120px;
+}
+
+.flame-2 {
+  left: 25%;
+  animation-delay: 1s;
+  animation-duration: 3.5s;
+  height: 200px;
+  width: 100px;
+}
+
+.flame-3 {
+  left: 40%;
+  animation-delay: 2s;
+  animation-duration: 4.5s;
+  height: 280px;
+  width: 140px;
+}
+
+.flame-4 {
+  left: 55%;
+  animation-delay: 0.5s;
+  animation-duration: 3s;
+  height: 220px;
+  width: 110px;
+}
+
+.flame-5 {
+  left: 70%;
+  animation-delay: 1.5s;
+  animation-duration: 4s;
+  height: 260px;
+  width: 130px;
+}
+
+.flame-6 {
+  left: 85%;
+  animation-delay: 2.5s;
+  animation-duration: 3.8s;
+  height: 240px;
+  width: 120px;
+}
+
+@keyframes flameFlicker {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1);
+    opacity: 0.8;
+    filter: blur(3px) brightness(1);
+  }
+  25% {
+    transform: scaleY(1.1) scaleX(0.9);
+    opacity: 1;
+    filter: blur(2px) brightness(1.2);
+  }
+  50% {
+    transform: scaleY(0.9) scaleX(1.1);
+    opacity: 0.6;
+    filter: blur(4px) brightness(0.8);
+  }
+  75% {
+    transform: scaleY(1.05) scaleX(0.95);
+    opacity: 0.9;
+    filter: blur(2.5px) brightness(1.1);
+  }
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
+  animation: backgroundPulse 6s ease-in-out infinite;
+}
+
+/* Vignette overlay intensifies during fall */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 85%);
+  opacity: 0.25;
+  transition: opacity 0.8s ease;
+  z-index: 900;
+}
+
+.fall-sequence .vignette {
+  opacity: 0.8;
+}
+
+/* Parallax cave walls */
+.cave-layers { position: fixed; inset: 0; pointer-events: none; z-index: 800; overflow: hidden; }
+.cave-layer {
+  position: absolute;
+  width: 180%;
+  left: -40%;
+  height: 160%;
+  top: -30%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.18;
+  filter: blur(2px) contrast(1.1);
+  transform: translateY(0) scale(1);
+}
+.cave-layer.layer-1 { background-image: radial-gradient(ellipse at 50% 60%, rgba(20,20,30,.9) 0%, rgba(10,10,16,.3) 60%, transparent 75%); z-index: 1; }
+.cave-layer.layer-2 { background-image: radial-gradient(ellipse at 40% 50%, rgba(12,12,18,.9) 0%, rgba(6,6,10,.3) 60%, transparent 78%); z-index: 2; opacity: .22; filter: blur(3px) contrast(1.2); }
+.cave-layer.layer-3 { background-image: radial-gradient(ellipse at 60% 40%, rgba(8,8,14,.95) 0%, rgba(4,4,8,.35) 55%, transparent 80%); z-index: 3; opacity: .28; filter: blur(4px) contrast(1.25); }
+
+.fall-sequence .layer-1 { animation: layerDrift1 2.4s cubic-bezier(.2,.9,.2,1) forwards; }
+.fall-sequence .layer-2 { animation: layerDrift2 2.4s cubic-bezier(.2,.9,.2,1) forwards; }
+.fall-sequence .layer-3 { animation: layerDrift3 2.4s cubic-bezier(.2,.9,.2,1) forwards; }
+
+/* Speed lines rush upward */
+.speed-lines { position: fixed; inset: 0; z-index: 850; pointer-events: none; overflow: hidden; }
+.speed-line {
+  position: absolute;
+  width: 2px;
+  height: 20vh;
+  top: 110%;
+  background: linear-gradient(to top, rgba(255,255,255,0), rgba(0, 200, 255, .65));
+  filter: blur(1px);
+  transform: translateY(0) translateX(0);
+  opacity: 0;
+}
+
+.fall-sequence .speed-line { animation: speedRush 1.6s linear forwards; }
+
+/* Debris silhouettes */
+.debris-field { position: fixed; inset: 0; pointer-events: none; z-index: 860; overflow: hidden; }
+.debris { position: absolute; bottom: -10vh; width: 0; height: 0; border-left: 10px solid transparent; border-right: 6px solid transparent; border-top: 18px solid rgba(20,20,26,0.8); filter: blur(1px); opacity: 0; transform: translateY(0) rotate(0deg) scale(1); }
+.fall-sequence .debris { animation: debrisRise 1.8s cubic-bezier(.2,.7,.2,1) forwards; }
+
+/* Volumetric dust */
+.dust { position: fixed; inset: 0; pointer-events: none; z-index: 845; overflow: hidden; }
+.dust-dot { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 70%); filter: blur(2px); opacity: .0; transform: translateY(0); }
+.fall-sequence .dust-dot { animation: dustDrift 3.2s ease-in-out forwards; }
+
+/* Lens refraction portal (center) */
+.lens { position: fixed; left: 50%; top: 50%; width: 60vmin; height: 60vmin; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; z-index: 950; mix-blend-mode: screen; opacity: 0; }
+.fall-sequence .lens { animation: lensPulse 1.4s ease-in-out forwards; }
+.lens::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(120,200,255,0.18), rgba(0,0,0,0) 60%); filter: blur(6px) saturate(1.2) contrast(1.1); }
+.lens::after { content: ''; position: absolute; inset: 8%; border-radius: 50%; border: 1px solid rgba(120,200,255,0.25); box-shadow: 0 0 24px rgba(120,200,255,0.35) inset; }
+
+/* Chromatic aberration flash */
+.aberration { position: fixed; inset: 0; pointer-events: none; z-index: 970; mix-blend-mode: screen; opacity: 0; }
+.fall-sequence .aberration { animation: aberrate 0.5s ease-in-out forwards; }
+.aberration::before, .aberration::after { content: ''; position: absolute; inset: 0; }
+.aberration::before { background: radial-gradient(circle at 50% 55%, rgba(255,0,80,0.12), transparent 60%); transform: translateX(-2px); filter: blur(1px); }
+.aberration::after { background: radial-gradient(circle at 50% 45%, rgba(0,160,255,0.12), transparent 60%); transform: translateX(2px); filter: blur(1px); }
+
+/* Floating particles */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #ff0000;
+  border-radius: 50%;
+  animation: float 6s infinite linear;
+}
+
+.particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 8s; }
+.particle:nth-child(2) { left: 20%; animation-delay: 1s; animation-duration: 10s; }
+.particle:nth-child(3) { left: 30%; animation-delay: 2s; animation-duration: 7s; }
+.particle:nth-child(4) { left: 40%; animation-delay: 3s; animation-duration: 9s; }
+.particle:nth-child(5) { left: 50%; animation-delay: 4s; animation-duration: 6s; }
+.particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 8s; }
+.particle:nth-child(7) { left: 70%; animation-delay: 6s; animation-duration: 10s; }
+.particle:nth-child(8) { left: 80%; animation-delay: 7s; animation-duration: 7s; }
+.particle:nth-child(9) { left: 90%; animation-delay: 8s; animation-duration: 9s; }
+
+.container {
+  text-align: center;
+  z-index: 10;
+  position: relative;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3rem 4rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 0 30px rgba(255, 0, 0, 0.2),
+    inset 0 0 30px rgba(255, 0, 0, 0.1);
+  animation: containerGlow 4s ease-in-out infinite;
+  transition: all 0.8s ease;
+}
+
+.container.falling {
+  transform: translateY(100vh) scale(0.1);
+  opacity: 0;
+  filter: blur(20px);
+}
+
+.title {
+  font-size: 4.5rem;
+  margin-bottom: 2.5rem;
+  text-shadow: 
+    0 0 20px #ff0000, 
+    0 0 40px #b30000,
+    0 0 60px #800000;
+  animation: flicker 3s infinite, titleFloat 4s ease-in-out infinite;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, #ff0000, #ff4444, #ff0000);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: 
+    flicker 3s infinite, 
+    titleFloat 4s ease-in-out infinite,
+    gradientShift 3s ease-in-out infinite;
+  transition: all 0.8s ease;
+}
+
+/* Stranger Things Intro Font Styling */
+.stranger-things-font {
+  font-family: 'Special Elite', monospace !important;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  font-size: 5rem;
+  background: linear-gradient(45deg, 
+    #00aaff 0%, 
+    #0088ff 25%, 
+    #0066cc 50%, 
+    #004499 75%, 
+    #002266 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 
+    0 0 20px #00aaff, 
+    0 0 40px #0088ff,
+    0 0 60px #0066cc,
+    0 0 80px #004499;
+  animation: 
+    strangerThingsGlow 4s ease-in-out infinite,
+    titleFloat 4s ease-in-out infinite;
+}
+
+.title.falling {
+  transform: translateY(100vh) scale(0.1);
+  opacity: 0;
+  filter: blur(20px);
+}
+
+.subtitle {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+  color: #ff6666;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px #ff0000;
+  opacity: 0.8;
+  animation: subtitlePulse 2s ease-in-out infinite;
+  transition: all 0.8s ease;
+}
+
+.subtitle.falling {
+  transform: translateY(100vh) scale(0.1);
+  opacity: 0;
+  filter: blur(20px);
+}
+
+#enterBtn {
+  font-size: 1.8rem;
+  padding: 18px 45px;
+  border: 2px solid #ff0000;
+  background: linear-gradient(45deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+  background-size: 200% 200%;
+  color: #ff0000;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-shadow: 0 0 15px #ff0000;
+  font-family: 'Creepster', cursive;
+  position: relative;
+  overflow: hidden;
+  animation: buttonGlow 2s ease-in-out infinite;
+}
+
+#enterBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+#enterBtn:hover::before {
+  left: 100%;
+}
+
+#enterBtn:hover {
+  background: linear-gradient(45deg, #ff0000, #cc0000);
+  color: #000;
+  box-shadow: 
+    0 0 30px #ff0000, 
+    0 0 60px #ff0000,
+    0 0 90px #ff0000;
+  transform: translateY(-3px) scale(1.05);
+  border-color: #ff4444;
+}
+
+#enterBtn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+#enterBtn.falling {
+  transform: translateY(100vh) scale(0.1);
+  opacity: 0;
+  filter: blur(20px);
+}
+
+/* Falling tunnel effect */
+.falling-tunnel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 0%, #000 70%);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 2s ease;
+}
+
+.falling-tunnel.active {
+  opacity: 1;
+  animation: tunnelFall 2s ease-in-out forwards;
+}
+
+/* Cave entrance effect */
+.cave-entrance {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, #000 0%, transparent 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 1.5s ease;
+}
+
+.cave-entrance.active {
+  opacity: 1;
+  width: 100vw;
+  height: 100vh;
+  animation: caveExpand 1.5s ease-in-out forwards;
+}
+
+/* Thunder and lightning effects */
+.thunder {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.lightning {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.3) 25%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    rgba(255, 255, 255, 0.3) 75%, 
+    rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  animation: lightning 8s infinite;
+}
+
+.lightning:nth-child(2) {
+  animation-delay: 3s;
+  background: linear-gradient(-45deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.4) 25%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    rgba(255, 255, 255, 0.4) 75%, 
+    rgba(255, 255, 255, 0.1) 100%);
+}
+
+.lightning:nth-child(3) {
+  animation-delay: 6s;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.2) 25%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    rgba(255, 255, 255, 0.2) 75%, 
+    rgba(255, 255, 255, 0.1) 100%);
+}
+
+/* Rain effect */
+.rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.raindrop {
+  position: absolute;
+  width: 1px;
+  height: 20px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: rain 1s linear infinite;
+}
+
+.raindrop:nth-child(1) { left: 5%; animation-delay: 0s; animation-duration: 0.8s; }
+.raindrop:nth-child(2) { left: 15%; animation-delay: 0.1s; animation-duration: 1.2s; }
+.raindrop:nth-child(3) { left: 25%; animation-delay: 0.2s; animation-duration: 0.9s; }
+.raindrop:nth-child(4) { left: 35%; animation-delay: 0.3s; animation-duration: 1.1s; }
+.raindrop:nth-child(5) { left: 45%; animation-delay: 0.4s; animation-duration: 0.7s; }
+.raindrop:nth-child(6) { left: 55%; animation-delay: 0.5s; animation-duration: 1.3s; }
+.raindrop:nth-child(7) { left: 65%; animation-delay: 0.6s; animation-duration: 0.8s; }
+.raindrop:nth-child(8) { left: 75%; animation-delay: 0.7s; animation-duration: 1.0s; }
+.raindrop:nth-child(9) { left: 85%; animation-delay: 0.8s; animation-duration: 1.1s; }
+.raindrop:nth-child(10) { left: 95%; animation-delay: 0.9s; animation-duration: 0.9s; }
+
+/* Animations */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes backgroundPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes float {
+  0% { 
+    top: 100vh; 
+    opacity: 0; 
+    transform: translateX(0) rotate(0deg);
+  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { 
+    top: -10px; 
+    opacity: 0; 
+    transform: translateX(100px) rotate(360deg);
+  }
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.3; }
+}
+
+@keyframes titleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes subtitlePulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes containerGlow {
+  0%, 100% { 
+    box-shadow: 
+      0 0 30px rgba(255, 0, 0, 0.2),
+      inset 0 0 30px rgba(255, 0, 0, 0.1);
+  }
+  50% { 
+    box-shadow: 
+      0 0 50px rgba(255, 0, 0, 0.4),
+      inset 0 0 50px rgba(255, 0, 0, 0.2);
+  }
+}
+
+@keyframes buttonGlow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+  }
+}
+
+@keyframes tunnelFall {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) translateY(-20px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2) translateY(-100px);
+    opacity: 1;
+  }
+}
+
+@keyframes caveExpand {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  50% {
+    width: 50vw;
+    height: 50vh;
+    opacity: 0.8;
+  }
+  100% {
+    width: 100vw;
+    height: 100vh;
+    opacity: 1;
+  }
+}
+
+/* New motion animations */
+@keyframes cameraFall { 0% { transform: perspective(900px) translateZ(0) rotateZ(0deg) translateY(0); filter: blur(0) saturate(1); } 30% { transform: perspective(900px) translateZ(80px) rotateZ(1deg) translateY(-10px); } 60% { transform: perspective(900px) translateZ(220px) rotateZ(-2deg) translateY(-30px); filter: blur(1px) saturate(1.1); } 100% { transform: perspective(900px) translateZ(420px) rotateZ(3deg) translateY(-80px) scale(1.1); filter: blur(1.5px) saturate(1.2); } }
+@keyframes layerDrift1 { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-30%) scale(1.05); } }
+@keyframes layerDrift2 { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-45%) scale(1.08); } }
+@keyframes layerDrift3 { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-65%) scale(1.12); } }
+@keyframes speedRush { 0% { opacity: 0; transform: translateY(0) translateX(0); } 10% { opacity: 1; } 100% { opacity: 0; transform: translateY(-140%) translateX(10px); } }
+@keyframes debrisRise { 0% { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.8); } 20% { opacity: .8; } 100% { opacity: 0; transform: translateY(-130vh) rotate(180deg) scale(1.05); } }
+@keyframes dustDrift { 0% { opacity: 0; transform: translateY(0) translateX(0); } 20% { opacity: .35; } 100% { opacity: 0; transform: translateY(-35vh) translateX(10vw); } }
+@keyframes lensPulse { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } 50% { opacity: .9; transform: translate(-50%, -50%) scale(1.02); } 100% { opacity: .0; transform: translate(-50%, -50%) scale(1.1); } }
+@keyframes aberrate { 0% { opacity: 0; } 40% { opacity: .9; } 100% { opacity: 0; } }
+
+/* Thunder and lightning animations */
+@keyframes lightning {
+  0%, 90%, 100% {
+    opacity: 0;
+  }
+  5%, 15% {
+    opacity: 0.8;
+  }
+  10% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes rain {
+  0% {
+    top: -20px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 100vh;
+    opacity: 0;
+  }
+}
+
+/* Stranger Things specific animations */
+@keyframes strangerThingsGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+    text-shadow: 
+      0 0 20px #00aaff, 
+      0 0 40px #0088ff,
+      0 0 60px #0066cc,
+      0 0 80px #004499;
+  }
+  50% {
+    background-position: 100% 50%;
+    text-shadow: 
+      0 0 30px #00aaff, 
+      0 0 50px #0088ff,
+      0 0 70px #0066cc,
+      0 0 90px #004499,
+      0 0 110px #002266;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+  
+  .stranger-things-font {
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+  }
+  
+  .container {
+    padding: 2rem;
+    margin: 1rem;
+  }
+  
+  #enterBtn {
+    font-size: 1.5rem;
+    padding: 15px 35px;
+  }
+  
+  .flame {
+    width: 60px;
+    height: 120px;
+  }
+}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter The Upside Down</title>
+  <link rel="stylesheet" href="loading.css">
+  <!-- Stranger Things Intro Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Orbitron:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Parallax cave layers -->
+  <div class="cave-layers">
+    <div class="cave-layer layer-1"></div>
+    <div class="cave-layer layer-2"></div>
+    <div class="cave-layer layer-3"></div>
+  </div>
+
+  <!-- Vignette overlay -->
+  <div class="vignette"></div>
+
+  <!-- Bluish flame-like background structure -->
+  <div class="flame-background">
+    <div class="flame flame-1"></div>
+    <div class="flame flame-2"></div>
+    <div class="flame flame-3"></div>
+    <div class="flame flame-4"></div>
+    <div class="flame flame-5"></div>
+    <div class="flame flame-6"></div>
+  </div>
+
+  <!-- Thunder and lightning effects -->
+  <div class="thunder">
+    <div class="lightning"></div>
+    <div class="lightning"></div>
+    <div class="lightning"></div>
+  </div>
+  
+  <!-- Rain effect -->
+  <div class="rain">
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+    <div class="raindrop"></div>
+  </div>
+
+  <!-- Speed lines / Debris / Dust / Lens / Aberration -->
+  <div class="speed-lines" id="speedLines"></div>
+  <div class="debris-field" id="debrisField"></div>
+  <div class="dust" id="dust"></div>
+  <div class="lens" id="lens"></div>
+  <div class="aberration" id="aberration"></div>
+
+  <!-- Falling tunnel effect -->
+  <div class="falling-tunnel" id="fallingTunnel"></div>
+  
+  <!-- Cave entrance effect -->
+  <div class="cave-entrance" id="caveEntrance"></div>
+
+  <!-- Background thunder audio -->
+  <audio id="thunderAudio" preload="auto" loop>
+    <source src="thunder.mp3" type="audio/mpeg">
+    <source src="thunder.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="container">
+    <h1 class="title stranger-things-font">STRANGER NIGHTS</h1>
+    <p class="subtitle">Where reality meets the supernatural</p>
+    <button id="enterBtn">Enter The Upside Down</button>
+  </div>
+
+  <script>
+    // build speed lines dynamically for performance
+    function buildSpeedLines() {
+      const holder = document.getElementById('speedLines');
+      if (!holder) return;
+      holder.innerHTML = '';
+      const count = 36;
+      for (let i = 0; i < count; i++) {
+        const div = document.createElement('div');
+        div.className = 'speed-line';
+        div.style.left = Math.random() * 100 + '%';
+        div.style.width = (1 + Math.random() * 2) + 'px';
+        div.style.height = (12 + Math.random() * 24) + 'vh';
+        div.style.animationDelay = (Math.random() * 0.4) + 's';
+        div.style.opacity = (0.2 + Math.random() * 0.7).toFixed(2);
+        holder.appendChild(div);
+      }
+    }
+
+    function buildDebris() {
+      const holder = document.getElementById('debrisField');
+      if (!holder) return;
+      holder.innerHTML = '';
+      const pieces = 12;
+      for (let i = 0; i < pieces; i++) {
+        const d = document.createElement('div');
+        d.className = 'debris';
+        d.style.left = (Math.random() * 100) + '%';
+        d.style.borderTopColor = 'rgba(' + (10+Math.floor(Math.random()*30)) + ',' + (10+Math.floor(Math.random()*30)) + ',' + (14+Math.floor(Math.random()*30)) + ',0.85)';
+        d.style.filter = 'blur(' + (Math.random()*1.8).toFixed(1) + 'px)';
+        d.style.animationDelay = (Math.random() * 0.5) + 's';
+        d.style.transform = 'rotate(' + (Math.random()*60 - 30).toFixed(1) + 'deg)';
+        holder.appendChild(d);
+      }
+    }
+
+    function buildDust() {
+      const holder = document.getElementById('dust');
+      if (!holder) return;
+      holder.innerHTML = '';
+      const dots = 28;
+      for (let i = 0; i < dots; i++) {
+        const p = document.createElement('div');
+        p.className = 'dust-dot';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = (20 + Math.random() * 60) + '%';
+        p.style.filter = 'blur(' + (1 + Math.random()*2).toFixed(1) + 'px)';
+        p.style.animationDelay = (Math.random() * 0.6) + 's';
+        holder.appendChild(p);
+      }
+    }
+
+    buildSpeedLines();
+    buildDebris();
+    buildDust();
+
+    // Audio management with stereo panning for thunder synth accents
+    let audioContext = null;
+    let thunderAudio = null;
+    let audioInitialized = false;
+
+    function initAudio() {
+      thunderAudio = document.getElementById('thunderAudio');
+      thunderAudio.volume = 0.7;
+      thunderAudio.preload = 'auto';
+      playThunderAudio();
+      audioInitialized = true;
+    }
+
+    function playThunderAudio() {
+      if (!thunderAudio) return;
+      const playPromise = thunderAudio.play();
+      if (playPromise) { playPromise.catch(() => {}); }
+    }
+
+    function playThunder(type = 'random', pan = 0) {
+      if (!audioContext) { audioContext = new (window.AudioContext || window.webkitAudioContext)(); }
+      const panner = audioContext.createStereoPanner ? audioContext.createStereoPanner() : null;
+      const gain = audioContext.createGain();
+      if (panner) { panner.pan.value = pan; gain.connect(audioContext.destination); } else { /* no panner */ }
+
+      const thunderTypes = { 'distant': { f: [40, 25], d: 0.8, v: 0.05 }, 'close': { f: [80, 35], d: 0.6, v: 0.15 }, 'rolling': { f: [60, 30], d: 1.2, v: 0.08 }, 'sharp': { f: [100, 45], d: 0.4, v: 0.12 } };
+      const keys = Object.keys(thunderTypes);
+      const config = thunderTypes[type === 'random' ? keys[Math.floor(Math.random()*keys.length)] : type];
+
+      for (let i = 0; i < 2; i++) {
+        const osc = audioContext.createOscillator();
+        const g = audioContext.createGain();
+        osc.connect(g);
+        if (panner) { g.connect(panner); panner.connect(audioContext.destination); } else { g.connect(audioContext.destination); }
+        const base = config.f[0] + (i * 8);
+        const end = config.f[1] + (i * 4);
+        osc.frequency.setValueAtTime(base, audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(end, audioContext.currentTime + config.d);
+        g.gain.setValueAtTime(config.v * (1 - i * 0.3), audioContext.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + config.d);
+        osc.start(); osc.stop(audioContext.currentTime + config.d);
+      }
+    }
+
+    function playBackgroundThunder() {
+      const types = ['distant','rolling','close'];
+      const pan = (Math.random() * 2 - 1) * 0.6; // -0.6..0.6
+      playThunder(types[Math.floor(Math.random()*types.length)], pan);
+      if (navigator.vibrate) { navigator.vibrate(10); }
+    }
+
+    function randomBackgroundThunder() {
+      const delay = Math.random() * 8000 + 3000;
+      setTimeout(() => { playBackgroundThunder(); randomBackgroundThunder(); }, delay);
+    }
+
+    function playIntenseThunder() {
+      setTimeout(() => playThunder('close', -0.5), 0);
+      setTimeout(() => playThunder('rolling', 0.5), 220);
+      setTimeout(() => playThunder('sharp', 0), 480);
+      if (navigator.vibrate) { navigator.vibrate([20, 40, 30]); }
+    }
+
+    randomBackgroundThunder();
+    setTimeout(() => { playThunder('distant', -0.3); }, 2000);
+    document.addEventListener('DOMContentLoaded', function() { initAudio(); });
+    document.addEventListener('click', function() { if (!audioInitialized) { initAudio(); } }, { once: true });
+
+    document.getElementById("enterBtn").addEventListener("click", () => {
+      const container = document.querySelector('.container');
+      const title = document.querySelector('.title');
+      const subtitle = document.querySelector('.subtitle');
+      const button = document.getElementById('enterBtn');
+      const fallingTunnel = document.getElementById('fallingTunnel');
+      const caveEntrance = document.getElementById('caveEntrance');
+      const lens = document.getElementById('lens');
+      const aberration = document.getElementById('aberration');
+
+      // Stop looped thunder
+      if (thunderAudio) { thunderAudio.pause(); thunderAudio.currentTime = 0; }
+
+      // Build fresh elements
+      buildSpeedLines();
+      buildDebris();
+      buildDust();
+
+      // Start new cinematic fall sequence
+      document.body.classList.add('fall-sequence');
+      container.classList.add('falling');
+      title.classList.add('falling');
+      subtitle.classList.add('falling');
+      button.classList.add('falling');
+
+      // Trigger lens refraction and chromatic aberration
+      lens && lens.offsetWidth; // force reflow
+      aberration && aberration.offsetWidth;
+      lens && lens.classList.add('active');
+      aberration && aberration.classList.add('active');
+
+      // Activate tunnel and cave effects staggered
+      setTimeout(() => { fallingTunnel.classList.add('active'); }, 250);
+      setTimeout(() => { caveEntrance.classList.add('active'); }, 900);
+
+      // Thunder accents + haptics
+      playIntenseThunder();
+
+      // Redirect after sequence
+      setTimeout(() => { window.location.href = "strange.html"; }, 2600);
+    });
+  </script>
+</body>
+</html>
